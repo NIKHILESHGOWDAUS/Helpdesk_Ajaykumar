@@ -5,14 +5,14 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3025;
+const port = process.env.PORT || 3502;
 
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
+    host: 'postgres',
     database: 'new_employee_db',
-    password: 'Password@12345',
-    port: 5432,
+    password: 'admin123',
+    port: 3502,
 });
 
 pool.connect((err, client, release) => {
@@ -27,12 +27,11 @@ app.use(cors());
 app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = [
-            'http://localhost:5500',
-            'http://127.0.0.1:5500',
-            'http://54.166.206.245:3025',
-            'http://localhost:3025',
-            'http://localhost:8080',
-            'http://127.0.0.1:8080'
+        'http://3.82.113.235:8504',
+        'http://3.82.113.235:8505',
+        'http://127.0.0.1:3025',
+        'http://127.0.0.1:5500',
+        'http://localhost:8049'
         ];
 
         console.log('CORS request from origin:', origin);
