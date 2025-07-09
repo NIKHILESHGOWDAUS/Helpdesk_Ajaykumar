@@ -5,14 +5,14 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3502;
+const port = process.env.PORT || 3507;
 
 const pool = new Pool({
     user: 'postgres',
     host: 'postgres',
     database: 'new_employee_db',
     password: 'admin123',
-    port: 3502,
+    port: 3507,
 });
 
 pool.connect((err, client, release) => {
