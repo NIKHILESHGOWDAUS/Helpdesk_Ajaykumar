@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: helpdesk_postgres
+    environment:
+      POSTGRES_DB: new_employee_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5635:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - helpdesk-network
+
+  backend:
+    build: ./Backend
+    container_name: helpdesk_backend
+    ports:
+      - "3635:3635"
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=admin123
+      - DB_NAME=new_employee_db
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - PORT=3635
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - helpdesk-network
+
+  frontend:
+    build: ./Frontend
+    container_name: helpdesk_frontend
+    ports:
+      - "8648:80"
+    networks:
+      - helpdesk-network
+
+  hr_page:
+    build: ./Hr_page
+    container_name: helpdesk_hr_page
+    ports:
+      - "8649:80"
+    networks:
+      - helpdesk-network
+
+volumes:
+  db_data:
+
+networks:
+  helpdesk-network:
+    driver: bridge
